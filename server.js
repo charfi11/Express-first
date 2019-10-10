@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-var con = require('./lib/db');
+var connection = require('./lib/db');
 var md5 = require('md5');
 
 app.set('view engine', 'ejs');
@@ -36,7 +36,7 @@ app.post('/register-form', function(req, res){
 
   var sql = 'INSERT INTO user(username, password, email) VALUES(?,?,?)'
   var params = [data.username, data.email, data.password]
-  con.run(sql, params, function(res){
+  connection.run(sql, params, function(res){
     res.json({
       "message": "success",
       "data": data,
