@@ -1,9 +1,15 @@
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser');
+var con = require('./lib/db');
+var md5 = require('md5');
 
 app.set('view engine', 'ejs');
 
 app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(express.json());
 
 app.get('/', function(req, res){
     res.render('index');
@@ -19,6 +25,24 @@ app.get('/login', function(req, res){
 
 app.get('/register', function(req, res){
   res.render('register');
+});
+
+app.post('/register-form', function(req, res){
+  var data = res.json({
+    name: req.body.username,
+    email: req.body.email,
+    password: md5(req.body.password)
+   })
+
+  var sql = 'INSERT INTO user(username, password, email) VALUES(?,?,?)'
+  var params = [data.username, data.email, data.password]
+  con.run(sql, params, function(res){
+    res.json({
+      "message": "success",
+      "data": data,
+      "id" : this.lastID
+  })
+  })
 });
 
 app.listen(3000, function() {
