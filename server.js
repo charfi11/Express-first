@@ -36,12 +36,8 @@ app.post('/register-form', function(req, res){
 
   var sql = 'INSERT INTO user(username, password, email) VALUES(?,?,?)'
   var params = [data.username, data.email, data.password]
-  connection.run(sql, params, function(res){
-    res.json({
-      "message": "success",
-      "data": data,
-      "id" : this.lastID
-  })
+  connection.query(sql, params, function(res){
+    
   })
 });
 
